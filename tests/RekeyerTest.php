@@ -9,6 +9,9 @@ use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Rekeyer;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
+/**
+ * @uses \Titoshadow\AnsibleVault\Rekeyer
+ */
 class RekeyerTest extends TestCase {
 
     /**

@@ -9,6 +9,9 @@ use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\VaultManager;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
+/**
+ * @uses \Titoshadow\AnsibleVault\VaultManager
+ */
 class VaultManagerTest extends TestCase {
 
     /**

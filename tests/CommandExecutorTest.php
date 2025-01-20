@@ -6,6 +6,10 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Titoshadow\AnsibleVault\CommandExecutor;
 
+/**
+ * @uses \Titoshadow\AnsibleVault\CommandExecutor
+ * @uses \Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException
+ */
 class CommandExecutorTest extends TestCase
 {
     /**

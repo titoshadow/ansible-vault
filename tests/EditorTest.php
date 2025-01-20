@@ -9,11 +9,17 @@ use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Editor;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
+/**
+ * @uses \Titoshadow\AnsibleVault\Editor
+ * @uses \Titoshadow\AnsibleVault\CommandExecutor
+ * @uses \Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException
+ */
 class EditorTest extends TestCase {
 
     /**
      * @covers \Titoshadow\AnsibleVault\Editor::edit
-     */    public function testCanEditAnEncryptedVault(): void
+     */
+    public function testCanEditAnEncryptedVault(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_edit.yml';
         $password = 'test_password';
@@ -43,7 +49,6 @@ class EditorTest extends TestCase {
             }
         }
     }
-
 
     /**
      * @covers \Titoshadow\AnsibleVault\Editor::edit
@@ -82,7 +87,6 @@ class EditorTest extends TestCase {
         }
     }
 
-
     /**
      * @covers \Titoshadow\AnsibleVault\Editor::edit
      */
@@ -120,7 +124,6 @@ class EditorTest extends TestCase {
         }
     }
 
-
     /**
      * @covers \Titoshadow\AnsibleVault\Editor::edit
      */
@@ -157,7 +160,6 @@ class EditorTest extends TestCase {
             }
         }
     }
-
 
     /**
      * @covers \Titoshadow\AnsibleVault\Editor::edit

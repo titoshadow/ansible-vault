@@ -9,6 +9,9 @@ use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Encrypter;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
+/**
+ * @uses \Titoshadow\AnsibleVault\Encrypter
+ */
 class EncrypterTest extends TestCase {
 
     /**
