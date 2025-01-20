@@ -18,12 +18,17 @@
         </testsuite>
     </testsuites>
 
-    <coverage cacheDirectory=".phpunit.cache/code-coverage"
-              processUncoveredFiles="true">
+    <coverage>
+        <cacheDirectory>.phpunit.cache/code-coverage</cacheDirectory>
+        <processUncoveredFiles>true</processUncoveredFiles>
         <include>
-            <directory suffix=".php">src</directory>
+            <directory>src</directory>
         </include>
     </coverage>
+
+    <logging>
+        <junit outputFile="junit.xml"/>
+    </logging>
 
     <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
