@@ -13,7 +13,7 @@ use Titoshadow\AnsibleVault\VaultManager;
 
 
 #[CoversClass('Titoshadow\AnsibleVault\VaultManager')]
-#[CoversMethod('Titoshadow\AnsibleVault\VaultManager', 'createVault')]
+#[CoversMethod('Titoshadow\AnsibleVault\VaultManager', 'create')]
 class VaultManagerTest extends TestCase {
 
     public function testCanCreateAnEncryptedVaultWithAPassword(): void
