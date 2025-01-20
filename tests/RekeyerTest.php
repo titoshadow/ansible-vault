@@ -3,20 +3,19 @@
 namespace Titoshadow\AnsibleVault\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\Exception;
 use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Rekeyer;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
-/**
- * @uses \Titoshadow\AnsibleVault\Rekeyer
- */
+
+#[CoversClass('Titoshadow\AnsibleVault\Rekeyer')]
+#[CoversMethod('Titoshadow\AnsibleVault\Rekeyer', 'rekey')]
 class RekeyerTest extends TestCase {
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Rekeyer::rekey
-     */
     public function testCanRekeyAVaultWithOldAndNewPasswords(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_rekey.yml';
@@ -50,9 +49,6 @@ class RekeyerTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Rekeyer::rekey
-     */
     public function testCanRekeyAVaultWithAPasswordFileAndNewPassword(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_rekey_file.yml';
@@ -89,9 +85,6 @@ class RekeyerTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Rekeyer::rekey
-     */
     public function testCanRekeyAVaultWithOldPasswordAndANewPasswordFile(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_rekey_file_new.yml';
@@ -128,9 +121,6 @@ class RekeyerTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Rekeyer::rekey
-     */
     public function testCanRekeyAVaultWithAPasswordFileAndANewPasswordFile(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_rekey_both_files.yml';
@@ -170,9 +160,6 @@ class RekeyerTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Rekeyer::rekey
-     */
     public function testCanRekeyAVaultWithVaultId(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_rekey_id.yml';
@@ -209,9 +196,6 @@ class RekeyerTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Rekeyer::rekey
-     */
     public function testCannotRekeyAVaultWithoutAnOldPassword(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_rekey_no_password.yml';

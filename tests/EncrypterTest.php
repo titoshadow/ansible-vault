@@ -3,20 +3,18 @@
 namespace Titoshadow\AnsibleVault\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Encrypter;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
-/**
- * @uses \Titoshadow\AnsibleVault\Encrypter
- */
+#[CoversClass('Titoshadow\AnsibleVault\Encrypter')]
+#[CoversMethod('Titoshadow\AnsibleVault\Encrypter', 'encrypt')]
 class EncrypterTest extends TestCase {
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Editor::encrypt
-     */
     public function testCanEncryptAFileWithAPassword(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt.txt';
@@ -31,7 +29,7 @@ class EncrypterTest extends TestCase {
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
         } catch (Exception $e) {
-
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -40,9 +38,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAFileWithAPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_file.txt';
@@ -56,6 +51,8 @@ class EncrypterTest extends TestCase {
             $this->assertTrue(true);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -67,9 +64,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAFileWithProvidedPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_provided_file.txt';
@@ -83,6 +77,8 @@ class EncrypterTest extends TestCase {
             $this->assertTrue(true);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -94,9 +90,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAFileWithAPasswordAndVaultId(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_id.txt';
@@ -111,6 +104,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('my_vault@prompt', $output);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -119,9 +114,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAStringWithAPassword(): void
     {
         $stringToEncrypt = 'super secret string';
@@ -134,13 +126,12 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('$ANSIBLE_VAULT', $encrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         }
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAStringWithAPasswordFile(): void
     {
         $stringToEncrypt = 'super secret string file';
@@ -153,7 +144,9 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('$ANSIBLE_VAULT', $encrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
-        }finally {
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
+        } finally {
             if (file_exists($passwordFile)) {
                 unlink($passwordFile);
             }
@@ -161,9 +154,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAStringWithProvidedPasswordFile(): void
     {
         $stringToEncrypt = 'super secret string provided file';
@@ -176,7 +166,9 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('$ANSIBLE_VAULT', $encrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
-        }finally {
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
+        } finally {
             if (file_exists($passwordFile)) {
                 unlink($passwordFile);
             }
@@ -184,9 +176,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanEncryptAStringWithAPasswordAndVaultId(): void
     {
         $stringToEncrypt = 'super secret string with id';
@@ -201,24 +190,23 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('my_vault', $encrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         }
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAFileWithAPassword(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt.txt';
         try {
-            $encryptedContent = sprintf('$ANSIBLE_VAULT;1.1;AES256
+            $encryptedContent = '$ANSIBLE_VAULT;1.1;AES256
           63333432373832343439343334353135333333393535313430343332303032323438383630363131
           323334383830373932393038303037323937353133350A35313339363530333830303434333136
           313830353330303035373333333639300A35313333353233373336393838343936343539333631
           3636323739323930340A3832393430393437323736333932323530343133333239323334373132
           3337330A31393535363431393932333839363632343839393334383630323839343835350A32
-          353238383532333139313933383038383137343434333333303334363234390A');
+          353238383532333139313933383038383137343434333333303334363234390A';
             file_put_contents($filePath, $encryptedContent);
             $password = 'test_password';
             $executor = $this->createMock(CommandExecutor::class);
@@ -228,6 +216,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('sensitive data', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -236,9 +226,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAFileWithAPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_file.txt';
@@ -259,6 +246,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('sensitive data', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -270,9 +259,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAFileWithProvidedPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_provided_file.txt';
@@ -293,6 +279,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('sensitive data', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -304,19 +292,16 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAFileWithAPasswordAndVaultId(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_id.txt';
         try {
-            $encryptedContent = sprintf('$ANSIBLE_VAULT;1.1;AES256;my_vault@prompt
+            $encryptedContent = '$ANSIBLE_VAULT;1.1;AES256;my_vault@prompt
           37303037383739333234393636313239373938303038373836313736383830363038323538343633
           373836303030373138393139393530373131353338300A34393235363832373634393131333530
           383538373339303438333432313133330A34353439393336353333343238393232303736383431
           33343738313131310A343038353336393533373839393832363938343036313538383633313933
-          33340A30393138313634313535383230383337333239323930383933343538373732340A');
+          33340A30393138313634313535383230383337333239323930383933343538373732340A';
             file_put_contents($filePath, $encryptedContent);
             $password = 'test_password';
             $vaultId = 'my_vault@prompt';
@@ -327,6 +312,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('super secret string with id', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($filePath)) {
                 unlink($filePath);
@@ -335,9 +322,6 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAStringWithAPassword(): void
     {
         $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256
@@ -355,21 +339,20 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('super secret string', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         }
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAStringWithAPasswordFile(): void
     {
-        $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256
+        $stringToDecrypt = '$ANSIBLE_VAULT;1.1;AES256
           38373036383537303734363637353032363831303834323136393037363034363239383432373031
           303033343939323830383731303739363534313531310A35303935343039353532363934393938
           353436373636333239393434353630390A32373938343934383737363033393633313731393831
           3838383533393033310A3333383031393530373737333534303232313831333436303433323739
-          34320A3334353934353433363930353132303734373333343635');
+          34320A3334353934353433363930353132303734373333343635';
         try {
             $passwordFile = __DIR__ . '/temp_password_file_decrypt_string.txt';
             $executor = $this->createMock(CommandExecutor::class);
@@ -379,6 +362,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('super secret string', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($passwordFile)) {
                 unlink($passwordFile);
@@ -387,17 +372,14 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAStringWithProvidedPasswordFile(): void
     {
-        $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256
+        $stringToDecrypt = '$ANSIBLE_VAULT;1.1;AES256
           38373036383537303734363637353032363831303834323136393037363034363239383432373031
           303033343939323830383731303739363534313531310A35303935343039353532363934393938
           353436373636333239393434353630390A32373938343934383737363033393633313731393831
           3838383533393033310A3333383031393530373737333534303232313831333436303433323739
-          34320A333435393435343336393035313230373437333334363534353436313633330A');
+          34320A333435393435343336393035313230373437333334363534353436313633330A';
         try {
             $passwordFile = __DIR__ . '/temp_provided_password_file_decrypt_string.txt';
             $executor = $this->createMock(CommandExecutor::class);
@@ -407,6 +389,8 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('super secret string', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         } finally {
             if (file_exists($passwordFile)) {
                 unlink($passwordFile);
@@ -415,17 +399,14 @@ class EncrypterTest extends TestCase {
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
-     */
     public function testCanDecryptAStringWithAPasswordAndVaultId(): void
     {
-        $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256;my_vault@prompt
+        $stringToDecrypt = '$ANSIBLE_VAULT;1.1;AES256;my_vault@prompt
           37303037383739333234393636313239373938303038373836313736383830363038323538343633
           373836303030373138393139393530373131353338300A34393235363832373634393131333530
           383538373339303438333432313133330A34353439393336353333343238393232303736383431
           33343738313131310A343038353336393533373839393832363938343036313538383633313933
-          33340A30393138313634313535383230383337333239323930383933343538373732340A');
+          33340A30393138313634313535383230383337333239323930383933343538373732340A';
         try {
             $password = 'test_password';
             $vaultId = 'my_vault@prompt';
@@ -436,12 +417,14 @@ class EncrypterTest extends TestCase {
             $this->assertStringContainsString('super secret string with id', $decrypted);
         } catch (AnsibleVaultNotFoundException $e) {
             $this->markTestSkipped($e->getMessage());
+        } catch (Exception $e) {
+            $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         }
     }
 
 
     /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     * @throws Exception
      */
     public function testCannotEncryptAFileWithoutAPassword(): void
     {
@@ -454,7 +437,7 @@ class EncrypterTest extends TestCase {
 
 
     /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     * @throws Exception
      */
     public function testCannotDecryptAFileWithoutAPassword(): void
     {
@@ -467,7 +450,7 @@ class EncrypterTest extends TestCase {
 
 
     /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     * @throws Exception
      */
     public function testCannotEncryptAStringWithoutAPassword(): void
     {
@@ -480,7 +463,7 @@ class EncrypterTest extends TestCase {
 
 
     /**
-     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     * @throws Exception
      */
     public function testCannotDecryptAStringWithoutAPassword(): void
     {
