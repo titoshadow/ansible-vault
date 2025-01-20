@@ -1,6 +1,6 @@
 # Ansible Vault PHP Wrapper
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Tests](https://github.com/your-namespace/repo-name/actions/workflows/tests.yml/badge.svg)](https://github.com/titoshadow/ansible-vault/actions/workflows/tests.yml)  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Tests](https://github.com/titoshadow/ansible-vault/actions/workflows/tests.yml/badge.svg)](https://github.com/titoshadow/ansible-vault/actions/workflows/tests.yml)
 [![Coverage](https://img.shields.io/codecov/c/github/titoshadow/ansible-vault.svg)](https://codecov.io/gh/titoshadow/ansible-vault)
 
 This library provides a simple PHP wrapper for the `ansible-vault` command, allowing to encrypt and decrypt content, 
