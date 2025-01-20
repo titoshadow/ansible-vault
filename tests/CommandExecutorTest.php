@@ -2,19 +2,15 @@
 
 namespace Titoshadow\AnsibleVault\Tests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Titoshadow\AnsibleVault\CommandExecutor;
 
-/**
- * @uses \Titoshadow\AnsibleVault\CommandExecutor
- * @uses \Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException
- */
-class CommandExecutorTest extends TestCase
-{
-    /**
-     * @covers \Titoshadow\AnsibleVault\CommandExecutor::execute
-     */
+#[CoversClass(CommandExecutor::class)]
+#[CoversClass('Titoshadow\AnsibleVault\CommandExecutor')]
+class CommandExecutorTest extends TestCase {
+
     public function testExecuteCommandSuccessfully(): void
     {
         $executor = new CommandExecutor();
@@ -22,9 +18,7 @@ class CommandExecutorTest extends TestCase
         $this->assertEquals("test\n", $output);
     }
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\CommandExecutor::execute
-     */
+
     public function testExecuteCommandWithInput(): void
     {
         $executor = new CommandExecutor();
@@ -33,9 +27,6 @@ class CommandExecutorTest extends TestCase
     }
 
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\CommandExecutor::execute
-     */
     public function testExecuteCommandFailed(): void
     {
         $this->expectException(ProcessFailedException::class);

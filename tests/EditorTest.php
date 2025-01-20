@@ -3,22 +3,18 @@
 namespace Titoshadow\AnsibleVault\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Editor;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
-/**
- * @uses \Titoshadow\AnsibleVault\Editor
- * @uses \Titoshadow\AnsibleVault\CommandExecutor
- * @uses \Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException
- */
+#[CoversClass('Titoshadow\AnsibleVault\Editor')]
+#[CoversMethod('Titoshadow\AnsibleVault\Editor', 'edit')]
 class EditorTest extends TestCase {
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Editor::edit
-     */
     public function testCanEditAnEncryptedVault(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_edit.yml';
@@ -50,9 +46,7 @@ class EditorTest extends TestCase {
         }
     }
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Editor::edit
-     */
+
     public function testCanEditAnEncryptedVaultWithPasswordFile(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_edit_file.yml';
@@ -87,9 +81,7 @@ class EditorTest extends TestCase {
         }
     }
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Editor::edit
-     */
+
     public function testCanEditAnEncryptedVaultWithProvidedPasswordFile(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_edit_provided_file.yml';
@@ -124,9 +116,7 @@ class EditorTest extends TestCase {
         }
     }
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Editor::edit
-     */
+
     public function testCanEditAnEncryptedVaultWithVaultId(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_edit_id.yml';
@@ -161,9 +151,7 @@ class EditorTest extends TestCase {
         }
     }
 
-    /**
-     * @covers \Titoshadow\AnsibleVault\Editor::edit
-     */
+
     public function testCannotEditAnEncryptedVaultWithoutAPassword(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_edit_no_password.yml';
