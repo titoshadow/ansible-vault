@@ -3,6 +3,7 @@
   "description": "A PHP wrapper for the ansible-vault command.",
   "type": "library",
   "license": "MIT",
+  "version": "1.0.0",
   "autoload": {
     "psr-4": {
       "Titoshadow\\AnsibleVault\\": "src/"
