@@ -11,6 +11,9 @@ use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
 class EncrypterTest extends TestCase {
 
+    /**
+     * @covers \Titoshadow\AnsibleVault\Editor::encrypt
+     */
     public function testCanEncryptAFileWithAPassword(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt.txt';
@@ -33,6 +36,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAFileWithAPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_file.txt';
@@ -56,6 +63,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAFileWithProvidedPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_provided_file.txt';
@@ -79,6 +90,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAFileWithAPasswordAndVaultId(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_id.txt';
@@ -100,6 +115,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAStringWithAPassword(): void
     {
         $stringToEncrypt = 'super secret string';
@@ -115,6 +134,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAStringWithAPasswordFile(): void
     {
         $stringToEncrypt = 'super secret string file';
@@ -134,6 +157,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAStringWithProvidedPasswordFile(): void
     {
         $stringToEncrypt = 'super secret string provided file';
@@ -153,6 +180,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanEncryptAStringWithAPasswordAndVaultId(): void
     {
         $stringToEncrypt = 'super secret string with id';
@@ -170,6 +201,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAFileWithAPassword(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt.txt';
@@ -197,6 +232,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAFileWithAPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_file.txt';
@@ -227,6 +266,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAFileWithProvidedPasswordFile(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_provided_file.txt';
@@ -257,6 +300,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAFileWithAPasswordAndVaultId(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_id.txt';
@@ -284,6 +331,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAStringWithAPassword(): void
     {
         $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256
@@ -304,6 +355,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAStringWithAPasswordFile(): void
     {
         $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256
@@ -328,6 +383,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAStringWithProvidedPasswordFile(): void
     {
         $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256
@@ -352,6 +411,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCanDecryptAStringWithAPasswordAndVaultId(): void
     {
         $stringToDecrypt = sprintf('$ANSIBLE_VAULT;1.1;AES256;my_vault@prompt
@@ -373,6 +436,10 @@ class EncrypterTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCannotEncryptAFileWithoutAPassword(): void
     {
         $filePath = __DIR__ . '/temp_file_to_encrypt_no_password.txt';
@@ -382,6 +449,10 @@ class EncrypterTest extends TestCase {
         $encrypter->encrypt($filePath);
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCannotDecryptAFileWithoutAPassword(): void
     {
         $filePath = __DIR__ . '/temp_file_to_decrypt_no_password.txt';
@@ -391,6 +462,10 @@ class EncrypterTest extends TestCase {
         $encrypter->decrypt($filePath);
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCannotEncryptAStringWithoutAPassword(): void
     {
         $stringToEncrypt = 'super secret string';
@@ -400,6 +475,10 @@ class EncrypterTest extends TestCase {
         $encrypter->encryptString($stringToEncrypt);
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\Encrypter::encrypt
+     */
     public function testCannotDecryptAStringWithoutAPassword(): void
     {
         $stringToDecrypt = 'encrypted string';

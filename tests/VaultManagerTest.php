@@ -11,6 +11,9 @@ use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
 class VaultManagerTest extends TestCase {
 
+    /**
+     * @covers \Titoshadow\AnsibleVault\VaultManager::createVault
+     */
     public function testCanCreateAnEncryptedVaultWithAPassword(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_encrypted.yml';
@@ -41,6 +44,10 @@ class VaultManagerTest extends TestCase {
 
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\VaultManager::createVault
+     */
     public function testCanCreateAnEncryptedVaultWithAPasswordFile(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_encrypted_file.yml';
@@ -73,6 +80,10 @@ class VaultManagerTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\VaultManager::createVault
+     */
     public function testCanCreateAnUnencryptedVault(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_unencrypted.yml';
@@ -101,6 +112,10 @@ class VaultManagerTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\VaultManager::createVault
+     */
     public function testCannotCreateAnEncryptedVaultWithoutAPassword(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_no_password.yml';
@@ -116,6 +131,10 @@ class VaultManagerTest extends TestCase {
         }
     }
 
+
+    /**
+     * @covers \Titoshadow\AnsibleVault\VaultManager::createVault
+     */
     public function testCanRemoveAVault(): void
     {
         $vaultPath = __DIR__ . '/temp_vault_to_remove.yml';
