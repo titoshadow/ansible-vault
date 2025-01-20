@@ -7,6 +7,9 @@
   </testsuites>
 
   <coverage pathCoverage="false" ignoreDeprecatedCodeUnits="true" disableCodeCoverageIgnore="true">
+    <report>
+      <clover outputFile="coverage.xml"/>
+    </report>
   </coverage>
 
   <logging>
