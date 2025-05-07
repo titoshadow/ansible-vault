@@ -2,6 +2,8 @@
 
 namespace Titoshadow\AnsibleVault;
 
+use InvalidArgumentException;
+
 class VaultManager
 {
     public function __construct(protected CommandExecutor $executor)
@@ -12,7 +14,7 @@ class VaultManager
     {
         $command = ['ansible-vault', 'create'];
         if ($encrypted && $password === null && $vaultPasswordFile === null) {
-            throw new \InvalidArgumentException('Password or vault password file is required to create an encrypted vault.');
+            throw new InvalidArgumentException('Password or vault password file is required to create an encrypted vault.');
         }
 
         if ($encrypted && $password !== null) {

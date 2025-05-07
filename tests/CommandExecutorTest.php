@@ -15,14 +15,14 @@ class CommandExecutorTest extends TestCase {
     {
         $executor = new CommandExecutor();
         $output = $executor->execute(['echo', 'test']);
-        $this->assertEquals("test\n", $output);
+        $this->assertEquals("test\n", str_replace("\r\n", "\n", $output));
     }
 
 
     public function testExecuteCommandWithInput(): void
     {
         $executor = new CommandExecutor();
-        $output = $executor->execute(['cat'], 'test input');
+        $output = $executor->execute(['php', '-r', 'echo fgets(STDIN);'], 'test input');
         $this->assertEquals("test input", $output);
     }
 
@@ -31,6 +31,6 @@ class CommandExecutorTest extends TestCase {
     {
         $this->expectException(ProcessFailedException::class);
         $executor = new CommandExecutor();
-        $executor->execute(['false']);
+        $executor->execute(['php', '-r', 'exit(1);']);
     }
 }
