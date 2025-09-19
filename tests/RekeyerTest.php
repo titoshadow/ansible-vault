@@ -5,15 +5,16 @@ namespace Titoshadow\AnsibleVault\Tests;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\Exception;
 use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Rekeyer;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
-
 #[CoversClass('Titoshadow\AnsibleVault\Rekeyer')]
 #[CoversMethod('Titoshadow\AnsibleVault\Rekeyer', 'rekey')]
+#[UsesClass('Titoshadow\AnsibleVault\Util\PasswordFileHelper')]
 class RekeyerTest extends TestCase {
 
     public function testCanRekeyAVaultWithOldAndNewPasswords(): void
@@ -24,13 +25,11 @@ class RekeyerTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $oldPassword, $newPassword) {
+                $this->callback(function (array $command) use ($vaultPath) {
                     return in_array('ansible-vault', $command) &&
                         in_array('rekey', $command) &&
-                        in_array('--vault-password', $command) &&
-                        in_array($oldPassword, $command) &&
-                        in_array('--new-vault-password', $command) &&
-                        in_array($newPassword, $command) &&
+                        in_array('--vault-password-file', $command) &&
+                        in_array('--new-vault-password-file', $command) &&
                         in_array($vaultPath, $command);
                 })
             );
@@ -57,13 +56,12 @@ class RekeyerTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $passwordFile, $newPassword) {
+                $this->callback(function (array $command) use ($vaultPath, $passwordFile) {
                     return in_array('ansible-vault', $command) &&
                         in_array('rekey', $command) &&
                         in_array('--vault-password-file', $command) &&
                         in_array($passwordFile, $command) &&
-                        in_array('--new-vault-password', $command) &&
-                        in_array($newPassword, $command) &&
+                        in_array('--new-vault-password-file', $command) &&
                         in_array($vaultPath, $command);
                 })
             );
@@ -93,11 +91,10 @@ class RekeyerTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $oldPassword, $newPasswordFile) {
+                $this->callback(function (array $command) use ($vaultPath, $newPasswordFile) {
                     return in_array('ansible-vault', $command) &&
                         in_array('rekey', $command) &&
-                        in_array('--vault-password', $command) &&
-                        in_array($oldPassword, $command) &&
+                        in_array('--vault-password-file', $command) &&
                         in_array('--new-vault-password-file', $command) &&
                         in_array($newPasswordFile, $command) &&
                         in_array($vaultPath, $command);
@@ -169,13 +166,11 @@ class RekeyerTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $oldPassword, $newPassword, $vaultId) {
+                $this->callback(function (array $command) use ($vaultPath, $vaultId) {
                     return in_array('ansible-vault', $command) &&
                         in_array('rekey', $command) &&
-                        in_array('--vault-password', $command) &&
-                        in_array($oldPassword, $command) &&
-                        in_array('--new-vault-password', $command) &&
-                        in_array($newPassword, $command) &&
+                        in_array('--vault-password-file', $command) &&
+                        in_array('--new-vault-password-file', $command) &&
                         in_array('--vault-id', $command) &&
                         in_array($vaultId, $command) &&
                         in_array($vaultPath, $command);

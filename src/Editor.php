@@ -3,18 +3,24 @@
 namespace Titoshadow\AnsibleVault;
 
 use InvalidArgumentException;
+use Titoshadow\AnsibleVault\Util\PasswordFileHelper;
 
 class Editor
 {
-    public function __construct(protected CommandExecutor $executor)
-    {
+    public function __construct(
+        protected CommandExecutor $executor,
+        protected string $binary = 'ansible-vault'
+    ) {
     }
 
     public function edit(string $path, ?string $password = null, ?string $vaultId = null, ?string $vaultPasswordFile = null): bool
     {
-        $command = ['ansible-vault', 'edit'];
+        $command = [$this->binary, 'edit'];
+        $tempFile = null;
+
         if ($password !== null) {
-            $command = array_merge($command, ['--vault-password', $password]);
+            $tempFile = PasswordFileHelper::create($password);
+            $command = array_merge($command, ['--vault-password-file', $tempFile]);
         } elseif ($vaultPasswordFile !== null) {
             $command = array_merge($command, ['--vault-password-file', $vaultPasswordFile]);
         } else {
@@ -27,7 +33,11 @@ class Editor
 
         $command[] = $path;
 
-        $this->executor->execute($command, tty: true);
+        try {
+            $this->executor->execute($command, tty: true);
+        } finally {
+            PasswordFileHelper::delete($tempFile);
+        }
 
         return true;
     }

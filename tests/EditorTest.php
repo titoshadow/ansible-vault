@@ -5,6 +5,7 @@ namespace Titoshadow\AnsibleVault\Tests;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Titoshadow\AnsibleVault\CommandExecutor;
@@ -13,6 +14,7 @@ use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
 #[CoversClass('Titoshadow\AnsibleVault\Editor')]
 #[CoversMethod('Titoshadow\AnsibleVault\Editor', 'edit')]
+#[UsesClass('Titoshadow\AnsibleVault\Util\PasswordFileHelper')]
 class EditorTest extends TestCase {
 
     public function testCanEditAnEncryptedVault(): void
@@ -22,11 +24,10 @@ class EditorTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $password) {
+                $this->callback(function (array $command) use ($vaultPath) {
                     return in_array('ansible-vault', $command) &&
                         in_array('edit', $command) &&
-                        in_array('--vault-password', $command) &&
-                        in_array($password, $command) &&
+                        in_array('--vault-password-file', $command) &&
                         in_array($vaultPath, $command);
                 }),
                 null,
@@ -125,11 +126,10 @@ class EditorTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $password, $vaultId) {
+                $this->callback(function (array $command) use ($vaultPath, $vaultId) {
                     return in_array('ansible-vault', $command) &&
                         in_array('edit', $command) &&
-                        in_array('--vault-password', $command) &&
-                        in_array($password, $command) &&
+                        in_array('--vault-password-file', $command) &&
                         in_array('--vault-id', $command) &&
                         in_array($vaultId, $command) &&
                         in_array($vaultPath, $command);

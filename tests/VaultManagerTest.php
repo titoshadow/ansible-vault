@@ -5,15 +5,16 @@ namespace Titoshadow\AnsibleVault\Tests;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Titoshadow\AnsibleVault\CommandExecutor;
 use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 use Titoshadow\AnsibleVault\VaultManager;
 
-
 #[CoversClass('Titoshadow\AnsibleVault\VaultManager')]
 #[CoversMethod('Titoshadow\AnsibleVault\VaultManager', 'create')]
+#[UsesClass('Titoshadow\AnsibleVault\Util\PasswordFileHelper')]
 class VaultManagerTest extends TestCase {
 
     public function testCanCreateAnEncryptedVaultWithAPassword(): void
@@ -23,11 +24,10 @@ class VaultManagerTest extends TestCase {
         try {
             $executor = $this->createMock(CommandExecutor::class);
             $executor->expects($this->once())->method('execute')->with(
-                $this->callback(function (array $command) use ($vaultPath, $password) {
+                $this->callback(function (array $command) use ($vaultPath) {
                     return in_array('ansible-vault', $command) &&
                         in_array('create', $command) &&
-                        in_array('--new-vault-password', $command) &&
-                        in_array($password, $command) &&
+                        in_array('--new-vault-password-file', $command) &&
                         in_array($vaultPath, $command);
                 })
             );

@@ -5,6 +5,7 @@ namespace Titoshadow\AnsibleVault\Tests;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Titoshadow\AnsibleVault\CommandExecutor;
@@ -13,6 +14,7 @@ use Titoshadow\AnsibleVault\Exception\AnsibleVaultNotFoundException;
 
 #[CoversClass('Titoshadow\AnsibleVault\Encrypter')]
 #[CoversMethod('Titoshadow\AnsibleVault\Encrypter', 'encrypt')]
+#[UsesClass('Titoshadow\AnsibleVault\Util\PasswordFileHelper')]
 class EncrypterTest extends TestCase {
 
     public function testCanEncryptAFileWithAPassword(): void
@@ -193,6 +195,93 @@ class EncrypterTest extends TestCase {
         } catch (Exception $e) {
             $this->markTestSkipped('Could not create mock object: ' . $e->getMessage());
         }
+    }
+
+    public function testEncryptStringUsesDefaultStdinName(): void
+    {
+        $stringToEncrypt = 'value';
+        $password = 'pwd';
+        $executor = $this->createMock(CommandExecutor::class);
+        $executor->expects($this->once())->method('execute')->with(
+            $this->callback(function (array $command) {
+                return in_array('ansible-vault', $command, true)
+                    && in_array('encrypt_string', $command, true)
+                    && in_array('--stdin', $command, true)
+                    && in_array('--stdin-name', $command, true)
+                    && in_array('secret', $command, true);
+            }),
+            $this->equalTo($stringToEncrypt)
+        )->willReturn('$ANSIBLE_VAULT;1.1;AES256;...');
+        $encrypter = new Encrypter($executor);
+        $encrypter->encryptString($stringToEncrypt, $password);
+        $this->assertTrue(true);
+    }
+
+    public function testEncryptStringUsesCustomStdinName(): void
+    {
+        $stringToEncrypt = 'value';
+        $password = 'pwd';
+        $stdinName = 'my_secret';
+        $executor = $this->createMock(CommandExecutor::class);
+        $executor->expects($this->once())->method('execute')->with(
+            $this->callback(function (array $command) use ($stdinName) {
+                return in_array('--stdin-name', $command, true)
+                    && in_array($stdinName, $command, true);
+            }),
+            $this->equalTo($stringToEncrypt)
+        )->willReturn('$ANSIBLE_VAULT;1.1;AES256;...');
+        $encrypter = new Encrypter($executor);
+        $encrypter->encryptString($stringToEncrypt, $password, stdinName: $stdinName);
+        $this->assertTrue(true);
+    }
+
+    public function testEncryptSshPasswordVarUsesConventionalStdinName(): void
+    {
+        $sshPassword = 'ssh-pass';
+        $password = 'vault-pwd';
+        $executor = $this->createMock(CommandExecutor::class);
+        $executor->expects($this->once())->method('execute')->with(
+            $this->callback(function (array $command) {
+                return in_array('encrypt_string', $command, true)
+                    && in_array('--stdin-name', $command, true)
+                    && in_array('ansible_ssh_pass', $command, true);
+            }),
+            $this->equalTo($sshPassword)
+        )->willReturn('$ANSIBLE_VAULT;1.1;AES256;...');
+        $encrypter = new Encrypter($executor);
+        $encrypter->encryptSshPasswordVar($sshPassword, $password);
+        $this->assertTrue(true);
+    }
+
+    public function testEncryptSshPasswordVarToFileWritesContent(): void
+    {
+        $sshPassword = 'ssh-pass';
+        $password = 'vault-pwd';
+        $outFile = __DIR__ . '/vault/host_1.vault';
+        @unlink($outFile);
+        @is_dir(dirname($outFile)) && array_map('unlink', glob(dirname($outFile) . '/*') ?: []);
+        @rmdir(dirname($outFile));
+
+        $executor = $this->createMock(CommandExecutor::class);
+        $executor->expects($this->once())->method('execute')
+            ->with(
+                $this->callback(function (array $command) {
+                    return in_array('encrypt_string', $command, true)
+                        && in_array('--stdin-name', $command, true)
+                        && in_array('ansible_ssh_pass', $command, true);
+                }),
+                $this->equalTo($sshPassword)
+            )
+            ->willReturn('$ANSIBLE_VAULT;1.1;AES256;encrypted-data');
+
+        $encrypter = new Encrypter($executor);
+        $this->assertTrue($encrypter->encryptSshPasswordVarToFile($sshPassword, $outFile, $password));
+        $this->assertFileExists($outFile);
+        $this->assertStringStartsWith('$ANSIBLE_VAULT;', trim(file_get_contents($outFile)));
+
+        // cleanup
+        @unlink($outFile);
+        @rmdir(dirname($outFile));
     }
 
 

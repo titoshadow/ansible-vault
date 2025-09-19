@@ -2,21 +2,25 @@
 
 namespace Titoshadow\AnsibleVault;
 
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
+use Titoshadow\AnsibleVault\Util\PasswordFileHelper;
 
 class Rekeyer
 {
-    public function __construct(protected CommandExecutor $executor)
-    {
+    public function __construct(
+        protected CommandExecutor $executor,
+        protected string $binary = 'ansible-vault'
+    ) {
     }
 
     public function rekey(string $path, ?string $oldPassword = null, ?string $newPassword = null, ?string $vaultId = null, ?string $vaultPasswordFile = null, ?string $newVaultPasswordFile = null): bool
     {
-        $command = ['ansible-vault', 'rekey'];
+        $command = [$this->binary, 'rekey'];
+        $tempOld = null;
+        $tempNew = null;
 
         if ($oldPassword !== null) {
-            $command = array_merge($command, ['--vault-password', $oldPassword]);
+            $tempOld = PasswordFileHelper::create($oldPassword);
+            $command = array_merge($command, ['--vault-password-file', $tempOld]);
         } elseif ($vaultPasswordFile !== null) {
             $command = array_merge($command, ['--vault-password-file', $vaultPasswordFile]);
         } else {
@@ -24,7 +28,8 @@ class Rekeyer
         }
 
         if ($newPassword !== null) {
-            $command = array_merge($command, ['--new-vault-password', $newPassword]);
+            $tempNew = PasswordFileHelper::create($newPassword);
+            $command = array_merge($command, ['--new-vault-password-file', $tempNew]);
         } elseif ($newVaultPasswordFile !== null) {
             $command = array_merge($command, ['--new-vault-password-file', $newVaultPasswordFile]);
         }
@@ -35,7 +40,12 @@ class Rekeyer
 
         $command[] = $path;
 
-        $this->executor->execute($command);
+        try {
+            $this->executor->execute($command);
+        } finally {
+            PasswordFileHelper::delete($tempOld);
+            PasswordFileHelper::delete($tempNew);
+        }
 
         return true;
     }

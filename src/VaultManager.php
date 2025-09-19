@@ -3,29 +3,39 @@
 namespace Titoshadow\AnsibleVault;
 
 use InvalidArgumentException;
+use Titoshadow\AnsibleVault\Util\PasswordFileHelper;
 
 class VaultManager
 {
-    public function __construct(protected CommandExecutor $executor)
-    {
+    public function __construct(
+        protected CommandExecutor $executor,
+        protected string $binary = 'ansible-vault'
+    ) {
     }
 
     public function create(string $path, ?string $password = null, bool $encrypted = true, ?string $vaultPasswordFile = null): bool
     {
-        $command = ['ansible-vault', 'create'];
+        $command = [$this->binary, 'create'];
+        $tempFile = null;
+
         if ($encrypted && $password === null && $vaultPasswordFile === null) {
             throw new InvalidArgumentException('Password or vault password file is required to create an encrypted vault.');
         }
 
         if ($encrypted && $password !== null) {
-            $command = array_merge($command, ['--new-vault-password', $password]);
+            $tempFile = PasswordFileHelper::create($password);
+            $command = array_merge($command, ['--new-vault-password-file', $tempFile]);
         } elseif ($encrypted && $vaultPasswordFile !== null) {
             $command = array_merge($command, ['--new-vault-password-file', $vaultPasswordFile]);
         }
 
         $command[] = $path;
 
-        $this->executor->execute($command);
+        try {
+            $this->executor->execute($command);
+        } finally {
+            PasswordFileHelper::delete($tempFile);
+        }
 
         return true;
     }
