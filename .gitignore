@@ -5,3 +5,4 @@ composer.phar
 /coverage.xml
 /junit.xml
 phpstan-result-cache
+.phpunit.cache
