@@ -6,3 +6,4 @@ composer.phar
 /junit.xml
 phpstan-result-cache
 .phpunit.cache
+clover.xml
