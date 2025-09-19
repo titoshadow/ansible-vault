@@ -1,0 +1,51 @@
+image: php:8.3-cli
+
+variables:
+  COMPOSER_CACHE_DIR: "$CI_PROJECT_DIR/.composer-cache"
+  XDEBUG_MODE: coverage
+
+cache:
+  key: "composer-${CI_COMMIT_REF_SLUG}"
+  paths:
+    - .composer-cache/
+    - vendor/
+
+stages:
+  - build
+  - test
+
+before_script:
+  - apt-get update -y
+  - apt-get install -y --no-install-recommends git unzip libzip-dev
+  - docker-php-ext-install zip
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - composer --version
+  - composer install --no-interaction --prefer-dist --no-progress
+
+build:composer-validate:
+  stage: build
+  script:
+    - composer validate --no-check-lock --strict
+
+test:phpunit:
+  stage: test
+  script:
+    - vendor/bin/phpunit --colors=never --coverage-clover=coverage/clover.xml
+  artifacts:
+    when: always
+    reports:
+      junit: tests/_output/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/clover.xml
+    paths:
+      - coverage/
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+
+# Optional job to run static analysis with Larastan (if configured)
+analyze:phpstan:
+  stage: test
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  script:
+    - vendor/bin/phpstan analyse --no-progress

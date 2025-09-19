@@ -2,3 +2,6 @@ composer.phar
 /vendor/
 .phpunit.result.cache
 .idea/
+/coverage.xml
+/junit.xml
+phpstan-result-cache
