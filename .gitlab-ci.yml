@@ -18,6 +18,8 @@ before_script:
   - apt-get update -y
   - apt-get install -y --no-install-recommends git unzip libzip-dev
   - docker-php-ext-install zip
+  - pecl install xdebug
+  - docker-php-ext-enable xdebug
   - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
   - composer --version
   - composer install --no-interaction --prefer-dist --no-progress
