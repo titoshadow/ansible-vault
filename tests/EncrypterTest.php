@@ -207,7 +207,7 @@ class EncrypterTest extends TestCase {
                 return in_array('ansible-vault', $command, true)
                     && in_array('encrypt_string', $command, true)
                     && in_array('--stdin', $command, true)
-                    && in_array('--stdin-name', $command, true)
+                    && in_array('--name', $command, true)
                     && in_array('secret', $command, true);
             }),
             $this->equalTo($stringToEncrypt)
@@ -225,7 +225,7 @@ class EncrypterTest extends TestCase {
         $executor = $this->createMock(CommandExecutor::class);
         $executor->expects($this->once())->method('execute')->with(
             $this->callback(function (array $command) use ($stdinName) {
-                return in_array('--stdin-name', $command, true)
+                return in_array('--name', $command, true)
                     && in_array($stdinName, $command, true);
             }),
             $this->equalTo($stringToEncrypt)
@@ -243,7 +243,7 @@ class EncrypterTest extends TestCase {
         $executor->expects($this->once())->method('execute')->with(
             $this->callback(function (array $command) {
                 return in_array('encrypt_string', $command, true)
-                    && in_array('--stdin-name', $command, true)
+                    && in_array('--name', $command, true)
                     && in_array('ansible_ssh_pass', $command, true);
             }),
             $this->equalTo($sshPassword)
@@ -267,7 +267,7 @@ class EncrypterTest extends TestCase {
             ->with(
                 $this->callback(function (array $command) {
                     return in_array('encrypt_string', $command, true)
-                        && in_array('--stdin-name', $command, true)
+                        && in_array('--name', $command, true)
                         && in_array('ansible_ssh_pass', $command, true);
                 }),
                 $this->equalTo($sshPassword)

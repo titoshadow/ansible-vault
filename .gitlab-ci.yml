@@ -36,7 +36,7 @@ test:phpunit:
   artifacts:
     when: always
     reports:
-      junit: tests/_output/junit.xml
+      junit: junit.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage/clover.xml

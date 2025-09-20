@@ -92,7 +92,7 @@ class AnsibleVault
             $vaultPasswordFile = $this->defaultVaultPasswordFile;
         }
 
-        $command = [$this->binary, 'encrypt_string', '--stdin', '--stdin-name', $stdinName];
+        $command = [$this->binary, 'encrypt_string', '--stdin', '--name', $stdinName];
         if ($password !== null) {
             $command = array_merge($command, ['--vault-password', $password]);
         } elseif ($vaultPasswordFile !== null) {

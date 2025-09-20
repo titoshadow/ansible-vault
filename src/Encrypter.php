@@ -41,7 +41,7 @@ class Encrypter
 
     public function encryptString(string $stringToEncrypt, ?string $password = null, ?string $vaultId = null, ?string $vaultPasswordFile = null, string $stdinName = 'secret'): string
     {
-        $command = [$this->binary, 'encrypt_string', '--stdin', '--stdin-name', $stdinName];
+        $command = [$this->binary, 'encrypt_string', '--stdin', '--name', $stdinName];
         $tempFile = null;
 
         if ($password !== null) {

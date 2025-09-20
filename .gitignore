@@ -7,3 +7,5 @@ composer.phar
 phpstan-result-cache
 .phpunit.cache
 clover.xml
+ansible-vault.iml
+php.xml
