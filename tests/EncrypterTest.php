@@ -203,14 +203,14 @@ class EncrypterTest extends TestCase {
         $password = 'pwd';
         $executor = $this->createMock(CommandExecutor::class);
         $executor->expects($this->once())->method('execute')->with(
-            $this->callback(function (array $command) {
+            $this->callback(function (array $command) use ($stringToEncrypt) {
                 return in_array('ansible-vault', $command, true)
                     && in_array('encrypt_string', $command, true)
-                    && in_array('--stdin', $command, true)
                     && in_array('--name', $command, true)
-                    && in_array('secret', $command, true);
-            }),
-            $this->equalTo($stringToEncrypt)
+                    && in_array('secret', $command, true)
+                    && in_array($stringToEncrypt, $command, true)
+                    && !in_array('--stdin', $command, true);
+            })
         )->willReturn('$ANSIBLE_VAULT;1.1;AES256;...');
         $encrypter = new Encrypter($executor);
         $encrypter->encryptString($stringToEncrypt, $password);
@@ -224,11 +224,12 @@ class EncrypterTest extends TestCase {
         $stdinName = 'my_secret';
         $executor = $this->createMock(CommandExecutor::class);
         $executor->expects($this->once())->method('execute')->with(
-            $this->callback(function (array $command) use ($stdinName) {
+            $this->callback(function (array $command) use ($stdinName, $stringToEncrypt) {
                 return in_array('--name', $command, true)
-                    && in_array($stdinName, $command, true);
-            }),
-            $this->equalTo($stringToEncrypt)
+                    && in_array($stdinName, $command, true)
+                    && in_array($stringToEncrypt, $command, true)
+                    && !in_array('--stdin', $command, true);
+            })
         )->willReturn('$ANSIBLE_VAULT;1.1;AES256;...');
         $encrypter = new Encrypter($executor);
         $encrypter->encryptString($stringToEncrypt, $password, stdinName: $stdinName);
@@ -241,12 +242,13 @@ class EncrypterTest extends TestCase {
         $password = 'vault-pwd';
         $executor = $this->createMock(CommandExecutor::class);
         $executor->expects($this->once())->method('execute')->with(
-            $this->callback(function (array $command) {
+            $this->callback(function (array $command) use ($sshPassword) {
                 return in_array('encrypt_string', $command, true)
                     && in_array('--name', $command, true)
-                    && in_array('ansible_ssh_pass', $command, true);
-            }),
-            $this->equalTo($sshPassword)
+                    && in_array('ansible_ssh_pass', $command, true)
+                    && in_array($sshPassword, $command, true)
+                    && !in_array('--stdin', $command, true);
+            })
         )->willReturn('$ANSIBLE_VAULT;1.1;AES256;...');
         $encrypter = new Encrypter($executor);
         $encrypter->encryptSshPasswordVar($sshPassword, $password);
@@ -265,12 +267,13 @@ class EncrypterTest extends TestCase {
         $executor = $this->createMock(CommandExecutor::class);
         $executor->expects($this->once())->method('execute')
             ->with(
-                $this->callback(function (array $command) {
+                $this->callback(function (array $command) use ($sshPassword) {
                     return in_array('encrypt_string', $command, true)
                         && in_array('--name', $command, true)
-                        && in_array('ansible_ssh_pass', $command, true);
-                }),
-                $this->equalTo($sshPassword)
+                        && in_array('ansible_ssh_pass', $command, true)
+                        && in_array($sshPassword, $command, true)
+                        && !in_array('--stdin', $command, true);
+                })
             )
             ->willReturn('$ANSIBLE_VAULT;1.1;AES256;encrypted-data');
 

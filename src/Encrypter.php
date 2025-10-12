@@ -41,7 +41,7 @@ class Encrypter
 
     public function encryptString(string $stringToEncrypt, ?string $password = null, ?string $vaultId = null, ?string $vaultPasswordFile = null, string $stdinName = 'secret'): string
     {
-        $command = [$this->binary, 'encrypt_string', '--stdin', '--name', $stdinName];
+        $command = [$this->binary, 'encrypt_string', $stringToEncrypt, '--name', $stdinName];
         $tempFile = null;
 
         if ($password !== null) {
@@ -58,7 +58,7 @@ class Encrypter
         }
 
         try {
-            return trim($this->executor->execute($command, $stringToEncrypt));
+            return trim($this->executor->execute($command));
         } finally {
             PasswordFileHelper::delete($tempFile);
         }
@@ -120,7 +120,17 @@ class Encrypter
 
     public function decryptString(string $stringToDecrypt, ?string $password = null, ?string $vaultId = null, ?string $vaultPasswordFile = null): string
     {
-        $command = [$this->binary, 'decrypt', '--stdin'];
+        $tempVaultFile = tempnam(sys_get_temp_dir(), 'vault_');
+        if ($tempVaultFile === false) {
+            throw new \RuntimeException('Failed to create temporary file for vault content.');
+        }
+
+        if (@file_put_contents($tempVaultFile, $stringToDecrypt) === false) {
+            @unlink($tempVaultFile);
+            throw new \RuntimeException('Failed to write vault content to temporary file.');
+        }
+
+        $command = [$this->binary, 'view', $tempVaultFile];
         $tempFile = null;
 
         if ($password !== null) {
@@ -137,9 +147,10 @@ class Encrypter
         }
 
         try {
-            return trim($this->executor->execute($command, $stringToDecrypt));
+            return trim($this->executor->execute($command));
         } finally {
             PasswordFileHelper::delete($tempFile);
+            @unlink($tempVaultFile);
         }
     }
 }

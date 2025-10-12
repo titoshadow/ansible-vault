@@ -92,7 +92,7 @@ class AnsibleVault
             $vaultPasswordFile = $this->defaultVaultPasswordFile;
         }
 
-        $command = [$this->binary, 'encrypt_string', '--stdin', '--name', $stdinName];
+        $command = [$this->binary, 'encrypt_string', $stringToEncrypt, '--name', $stdinName];
         if ($password !== null) {
             $command = array_merge($command, ['--vault-password', $password]);
         } elseif ($vaultPasswordFile !== null) {
@@ -105,7 +105,7 @@ class AnsibleVault
             $command = array_merge($command, ['--vault-id', $vaultId]);
         }
 
-        return trim($this->executor->execute($command, $stringToEncrypt));
+        return trim($this->executor->execute($command));
     }
 
     public function decrypt(string $target, ?string $password = null, ?string $vaultId = null, ?string $vaultPasswordFile = null): string
@@ -138,12 +138,23 @@ class AnsibleVault
             $vaultPasswordFile = $this->defaultVaultPasswordFile;
         }
 
-        $command = [$this->binary, 'decrypt', '--stdin'];
+        $tempVaultFile = tempnam(sys_get_temp_dir(), 'vault_');
+        if ($tempVaultFile === false) {
+            throw new \RuntimeException('Failed to create temporary file for vault content.');
+        }
+
+        if (@file_put_contents($tempVaultFile, $stringToDecrypt) === false) {
+            @unlink($tempVaultFile);
+            throw new \RuntimeException('Failed to write vault content to temporary file.');
+        }
+
+        $command = [$this->binary, 'view', $tempVaultFile];
         if ($password !== null) {
             $command = array_merge($command, ['--vault-password', $password]);
         } elseif ($vaultPasswordFile !== null) {
             $command = array_merge($command, ['--vault-password-file', $vaultPasswordFile]);
         } else {
+            @unlink($tempVaultFile);
             throw new InvalidArgumentException('Password or vault password file is required to decrypt.');
         }
 
@@ -151,7 +162,11 @@ class AnsibleVault
             $command = array_merge($command, ['--vault-id', $vaultId]);
         }
 
-        return trim($this->executor->execute($command, $stringToDecrypt));
+        try {
+            return trim($this->executor->execute($command));
+        } finally {
+            @unlink($tempVaultFile);
+        }
     }
 
     public function edit(string $path, ?string $password = null, ?string $vaultId = null, ?string $vaultPasswordFile = null): bool
