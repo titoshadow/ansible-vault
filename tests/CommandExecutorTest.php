@@ -12,7 +12,6 @@ use Titoshadow\AnsibleVault\Exception\VaultCliUsageException;
 use Titoshadow\AnsibleVault\Exception\VaultExecutionException;
 
 #[CoversClass(CommandExecutor::class)]
-#[CoversClass('Titoshadow\AnsibleVault\CommandExecutor')]
 #[UsesClass('Titoshadow\AnsibleVault\Exception\VaultExecutionException')]
 #[UsesClass('Titoshadow\AnsibleVault\Exception\VaultCliUsageException')]
 #[UsesClass('Titoshadow\AnsibleVault\Exception\VaultAuthException')]
